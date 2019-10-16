@@ -2,11 +2,19 @@ import requests
 import schedule
 import json
 import time
+import os
+import sys
 
 old_ip = ""
+token = ""
+try:
+    token = os.environ['SERVER_JIANG_TOKEN']
+except KeyError:
+    print("Please set the environment varibale SERVER_JIANG_TOKEN")
+    sys.exit(1)
 
 def notify(text="Hi", desp="winjay"):
-    URL = "https://sc.ftqq.com/SCU61328Taf290a285847a30b475292f25cc901ba5d80a7406ac8b.send?text={text}&desp={desp}".format(text=text, desp=desp)
+    URL = "https://sc.ftqq.com/token={token}.send?text={text}&desp={desp}".format(token=token, text=text, desp=desp)
     try:
         requests.get(URL)
     except requests.exceptions.RequestException as e:
@@ -36,7 +44,6 @@ def set_ip(ip):
     f.close()
 
 schedule.every(1).minutes.do(job)
-
 
 while True:
     schedule.run_pending()
